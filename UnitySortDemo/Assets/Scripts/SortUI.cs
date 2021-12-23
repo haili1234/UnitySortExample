@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class SortUI : MonoBehaviour
 {
-    // Start is called before the first frame update
     public List<InputField> InputFields = new List<InputField>();
     public string SortResultsPre = "排序结果：";
     public List<Text> SortResults = new List<Text>();
@@ -80,8 +79,7 @@ public class SortUI : MonoBehaviour
                 break;
         }
     }
-
-
+    
     #region 方法封装
     /// <summary>
     /// 字符串数组转换整形数组

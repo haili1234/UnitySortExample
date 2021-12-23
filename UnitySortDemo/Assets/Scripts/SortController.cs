@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 排序逻辑控制器
+/// 排序逻辑控制器（参照：https://www.runoob.com/w3cnote/ten-sorting-algorithm.html）
 /// </summary>
 public class SortController : MonoBehaviour
 {
@@ -143,7 +142,7 @@ public class SortController : MonoBehaviour
             for (int i = h; i < n; i++)
             {
                 // 将arr[i] 插入到所在分组的正确位置上
-                insertI(arr, h, i);
+                InsertIValue(arr, h, i);
             }
         }
 
@@ -156,7 +155,7 @@ public class SortController : MonoBehaviour
     /// <param name="arr"></param>
     /// <param name="h"></param>
     /// <param name="i"></param>
-    private void insertI(int[] arr, int h, int i)
+    private void InsertIValue(int[] arr, int h, int i)
     {
         int temp = arr[i];
         int k;
@@ -176,8 +175,8 @@ public class SortController : MonoBehaviour
     /// 归并排序(递归式)
     /// </summary>
     /// <param name="arr">需要排序的数组值</param>
-    /// <param name="left">左半部分内容</param>
-    /// <param name="right">右半部分内容</param>
+    /// <param name="left">左半部分索引</param>
+    /// <param name="right">右半部分索引</param>
     /// <returns></returns>
     public int[] MergeSort(int[] arr, int left, int right)
     {
@@ -205,8 +204,7 @@ public class SortController : MonoBehaviour
     public int[] MergeNonFuncSort(int[] arr)
     {
         int n = arr.Length;
-        // 子数组的大小分别为1，2，4，8...
-        // 刚开始合并的数组大小是1，接着是2，接着4....
+        //子数组的大小分别为1，2，4，8...，合并的数组大小是1，接着是2，接着4...
         for (int i = 1; i < n; i += i)
         {
             //进行数组进行划分
@@ -216,15 +214,14 @@ public class SortController : MonoBehaviour
             //进行合并，对数组大小为 i 的数组进行两两合并
             while (right < n)
             {
-                // 合并函数和递归式的合并函数一样
+                //合并函数和递归式的合并函数一样
                 Merge(arr, left, mid, right);
                 left = right + 1;
                 mid = left + i - 1;
                 right = mid + i;
             }
 
-            // 还有一些被遗漏的数组没合并，千万别忘了
-            // 因为不可能每个字数组的大小都刚好为 i
+            // 剩余数组合并
             if (left < n && mid < n)
             {
                 Merge(arr, left, mid, n - 1);
@@ -243,7 +240,7 @@ public class SortController : MonoBehaviour
     /// <param name="right"></param>
     private void Merge(int[] arr, int left, int mid, int right)
     {
-        //先用一个临时数组把他们合并汇总起来
+        //临时数组进行合并汇总
         int[] a = new int[right - left + 1];
         int i = left;
         int j = mid + 1;
@@ -262,7 +259,7 @@ public class SortController : MonoBehaviour
 
         while (i <= mid) a[k++] = arr[i++];
         while (j <= right) a[k++] = arr[j++];
-        // 把临时数组复制到原数组
+        //临时数组复制到原数组
         for (i = 0; i < k; i++)
         {
             arr[left++] = a[i];
@@ -447,7 +444,6 @@ public class SortController : MonoBehaviour
     public double[] BucketSort(double[] arr, int bucketNum)
     {
         //创建bucket时，在二维中增加一组标识位，其中bucket[x, 0]表示这一维所包含的数字的个数
-        //通过这样的技巧可以少写很多代码
         double[,] bucket = new double[bucketNum, arr.Length + 1];
         foreach (var num in arr)
         {
@@ -505,8 +501,10 @@ public class SortController : MonoBehaviour
 
     #endregion
 
+    #region 基数排序
+
     /// <summary>
-    /// 
+    /// 基数排序
     /// </summary>
     /// <param name="myArray"></param>
     /// <param name="keyNum"></param>
@@ -515,7 +513,7 @@ public class SortController : MonoBehaviour
         SingleLinkedList<int> listArray = new SingleLinkedList<int>();
         foreach (int i in myArray)
         {
-            listArray.AddLast(new MyLLNode<int>() {Value = i});
+            listArray.AddLast(new SingleLLNode<int>() {Value = i});
         }
 
         for (int i = 0; i < keyNum; i++)
@@ -533,7 +531,7 @@ public class SortController : MonoBehaviour
 
         return myArray;
     }
-    
+
     /// <summary>
     /// 分配和收集
     /// </summary>
@@ -554,7 +552,7 @@ public class SortController : MonoBehaviour
         {
             int index = (listArray.First.Value / divider) % 10;
 
-            MyLLNode<int> tempNode = listArray.First.Next;
+            SingleLLNode<int> tempNode = listArray.First.Next;
             subLists[index].AddLast(listArray.First);
             listArray.First = tempNode;
         }
@@ -582,16 +580,18 @@ public class SortController : MonoBehaviour
             }
         }
     }
+
+    #endregion
 }
 
 // 单链表
 class SingleLinkedList<T>
 {
-    public MyLLNode<T> First { get; set; }
+    public SingleLLNode<T> First { get; set; }
 
-    public MyLLNode<T> Last { get; set; }
+    public SingleLLNode<T> Last { get; set; }
 
-    public void AddLast(MyLLNode<T> node)
+    public void AddLast(SingleLLNode<T> node)
     {
         if (First == null)
         {
@@ -609,9 +609,9 @@ class SingleLinkedList<T>
 }
 
 // 单链表结点
-class MyLLNode<T>
+class SingleLLNode<T>
 {
     public T Value { get; set; }
 
-    public MyLLNode<T> Next { get; set; }
+    public SingleLLNode<T> Next { get; set; }
 }
